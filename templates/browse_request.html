@@ -2,22 +2,122 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Browse Maintenance Requests</title>
   <style>
+    /* Styles for the body */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Styles for the navigation bar */
+    nav {
+      background-color: #007BFF;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin-right: 20px;
+    }
+
+    /* Styles for the main content */
+    h1 {
+      font-size: 24px;
+      color: #333;
+      padding: 20px;
+      text-align: center;
+    }
+
+    form {
+      background-color: #fff;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin: 20px auto;
+      max-width: 600px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+
+    input[type="text"],
+    select,
+    input[type="date"],
+    input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+      background-position: right center;
+      background-repeat: no-repeat;
+      padding-right: 30px;
+    }
+
+    input[type="submit"] {
+      background-color: #007BFF;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+
+    /* Styles for the list of maintenance requests */
     ul {
       list-style-type: none;
+      padding: 0;
     }
+
     li {
+      background-color: #fff;
       margin-bottom: 20px;
-      padding: 10px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    img {
+      max-width: 200px;
+      height: auto;
+      margin-right: 20px;
       border: 1px solid #ddd;
     }
-    img {
-      max-width: 100px;
-      height: auto;
+
+    /* Styles for the update status form */
+    form[action="/update_status"] {
+      display: flex;
+      align-items: center;
     }
-    form {
-      margin-top: 10px;
+
+    select[name="new_status"] {
+      margin-right: 10px;
+    }
+
+    input[type="submit"] {
+      background-color: #007BFF;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -28,23 +128,37 @@
 
 <h1>Browse Maintenance Requests</h1>
 <form action="/browse_request" method="get">
-  Apartment Number: <input type="text" name="apartment_number"><br>
-  Area: <input type="text" name="area"><br>
-  Status:
-  <select name="status">
+  <label for="apartment_number">Apartment Number:</label>
+  <input type="text" name="apartment_number" id="apartment_number">
+
+  <label for="area">Area:</label>
+  <input type="text" name="area" id="area">
+
+  <label for="status">Status:</label>
+  <select name="status" id="status">
     <option value="">All</option>
     <option value="pending">Pending</option>
     <option value="completed">Completed</option>
-  </select><br>
-  Start Date: <input type="date" name="start_date"><br>
-  End Date: <input type="date" name="end_date"><br>
+  </select>
+
+  <label for="start_date">Start Date:</label>
+  <input type="date" name="start_date" id="start_date">
+
+  <label for="end_date">End Date:</label>
+  <input type="date" name="end_date" id="end_date">
+
   <input type="submit" value="Filter">
 </form>
 <ul>
   {% for request in requests %}
   <li>
-    ID: {{ request['request_id'] }} - Apartment: {{ request['apartment_number'] }} - Area: {{ request['area'] }}
-    - Description: {{ request['description'] }} - Status: {{ request['status'] }}
+    <div>
+      <strong>ID:</strong> {{ request['request_id'] }}<br>
+      <strong>Apartment:</strong> {{ request['apartment_number'] }}<br>
+      <strong>Area:</strong> {{ request['area'] }}<br>
+      <strong>Description:</strong> {{ request['description'] }}<br>
+      <strong>Status:</strong> {{ request['status'] }}
+    </div>
 
     {% if request['photo_url'] %}
     <img src="{{ request['photo_url'] }}" alt="Maintenance Request Photo">

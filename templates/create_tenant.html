@@ -2,8 +2,99 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Maintenance Request Web App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maintenance Request Web App - Create Tenant Account</title>
     <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navigation Styles */
+        nav {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #007BFF;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin: 0;
+        }
+
+        /* Section Styles */
+        section {
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            margin: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        /* Form Styles */
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="date"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -12,25 +103,29 @@
 </nav>
 <header>
     <h1>Maintenance Request Web App</h1>
-    <nav>
-    </nav>
 </header>
 
 <section>
     <h2>Create Tenant Account</h2>
     <form action="/create_tenant" method="post">
-        <label for="name">Name:</label><br>
-        <input type="text" id="name" name="name"><br>
-        <label for="phone">Phone Number:</label><br>
-        <input type="text" id="phone" name="phone"><br>
-        <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email"><br>
-        <label for="check_in">Check-In Date:</label><br>
-        <input type="date" id="check_in" name="check_in"><br>
-        <label for="check_out">Check-Out Date:</label><br>
-        <input type="date" id="check_out" name="check_out"><br>
-        <label for="apartment_number">Apartment Number:</label><br>
-        <input type="text" id="apartment_number" name="apartment_number"><br>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name">
+
+        <label for="phone">Phone Number:</label>
+        <input type="text" id="phone" name="phone">
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email">
+
+        <label for="check_in">Check-In Date:</label>
+        <input type="date" id="check_in" name="check_in">
+
+        <label for="check_out">Check-Out Date:</label>
+        <input type="date" id="check_out" name="check_out">
+
+        <label for="apartment_number">Apartment Number:</label>
+        <input type="text" id="apartment_number" name="apartment_number">
+
         <input type="submit" value="Create Account">
     </form>
 </section>

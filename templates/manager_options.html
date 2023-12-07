@@ -2,25 +2,91 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Manager Options</title>
     <style>
         /* Add styles for headers, navigation, and list */
         body {
             font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            text-align: center;
         }
-        ul, li {
+
+        nav {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .options {
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .sub-heading {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .tenant-list {
             list-style-type: none;
             padding: 0;
         }
-        li {
-            margin-bottom: 10px;
-        }
-        .tenant-list {
-            margin-top: 20px;
-        }
-        .tenant-list li {
+
+        .tenant-item {
+            background-color: #fff;
+            margin-bottom: 20px;
+            padding: 20px;
             border: 1px solid #ddd;
-            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .tenant-details {
+            flex: 2;
         }
     </style>
 </head>
@@ -28,18 +94,22 @@
     <nav>
         <a href="/">Home</a>
     </nav>
-    <h2>Manager Options</h2>
-    <ul>
-        <li><a href="/create_tenant">Add New Tenant</a></li>
-        <li><a href="/manage_tenants">Manage Tenants</a></li>
-    </ul>
-    <h3>Current Tenants</h3>
-    <ul class="tenant-list">
-        {% for tenant in tenants %}
-        <li>
-            Tenant ID: {{ tenant['tenant_id'] }}, Name: {{ tenant['name'] }}, Apartment: {{ tenant['apartment_number'] }}
-        </li>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <h1 class="page-title">Manager Options</h1>
+        <div class="options">
+            <a class="btn" href="/create_tenant">Add New Tenant</a>
+            <a class="btn" href="/manage_tenants">Manage Tenants</a>
+        </div>
+        <h2 class="sub-heading">Current Tenants</h2>
+        <ul class="tenant-list">
+            {% for tenant in tenants %}
+            <li class="tenant-item">
+                <div class="tenant-details">
+                    Tenant ID: {{ tenant['tenant_id'] }}, Name: {{ tenant['name'] }}, Apartment: {{ tenant['apartment_number'] }}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
 </body>
 </html>

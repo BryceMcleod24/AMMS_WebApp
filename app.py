@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for
 import firebase_admin
 from firebase_admin import credentials, firestore
-from datetime import datetime
 from werkzeug.utils import secure_filename
 from firebase_admin import storage
+from datetime import datetime
+import uuid
 
 # Initialize Firebase Admin with the service account and specify the storageBucket
 app = Flask(__name__)
@@ -19,9 +20,7 @@ bucket = storage.bucket()
 @app.route('/')
 def home():
     return render_template('home.html')
-    # return render_template('submit_request.html')
     # return render_template('browse_request.html')
-    # return render_template('create_tenant.html')
 
 @app.route('/tenant')
 def tenant():
@@ -29,7 +28,7 @@ def tenant():
 
 @app.route('/staff')
 def staff():
-    return render_template('view_request.html')  # or any other page accessible by staff
+    return render_template('browse_request.html')  # or any other page accessible by staff
 
 @app.route('/manager')
 def manager():
@@ -42,53 +41,38 @@ def manager_options():
     tenants = [tenant.to_dict() for tenant in tenants_query]
     return render_template('manager_options.html', tenants=tenants)
 
-
-
 @app.route('/submit_request', methods=['GET', 'POST'])
 def submit_request():
     if request.method == 'POST':
         data = request.form
-        if not data.get('tenant_id') or not data.get('apartment'):
-            return "Error: Missing required fields", 400
-
         photo = request.files['photo']
+        photo_url = None
 
         if photo:
-            # Ensure the filename is safe, e.g., "my_picture.jpg"
             filename = secure_filename(photo.filename)
-
-            # Create a Cloud Storage bucket reference
-            bucket = storage.bucket()
-
-            # Create a new blob (file) in the bucket
             blob = bucket.blob(filename)
-
-            # Upload the file
             blob.upload_from_file(photo)
-
-            # Get the URL of the uploaded file
             photo_url = blob.public_url
-        else:
-            photo_url = None
 
-        # Store other data along with photo URL in Firestore
+        request_id = str(uuid.uuid4())  # Generate unique request ID
+        current_time = datetime.now()  # Record current date and time
+
         db.collection('maintenance_requests').add({
-            'tenant_id': data.get('tenant_id'),
+            'request_id': request_id,
             'apartment': data.get('apartment'),
             'area': data.get('area'),
             'description': data.get('description'),
             'photo_url': photo_url,
-            'status': 'pending'  # Default status
+            'status': 'pending',
+            'request_date': current_time
         })
         return redirect(url_for('submit_request'))
     return render_template('submit_request.html')
 
-
-# Route to View Requests
 @app.route('/view_request')
 def view_request():
-    docs = db.collection('maintenance_requests').stream()
-    requests = [doc.to_dict() for doc in docs]
+    requests_query = db.collection('maintenance_requests').stream()
+    requests = [req.to_dict() for req in requests_query]
     return render_template('view_request.html', requests=requests)
 
 @app.route('/create_tenant', methods=['GET'])
@@ -110,7 +94,6 @@ def create_tenant():
     })
     return redirect(url_for('home'))  # Redirect to the home page after submission
 
-# Route to Manage Tenant Accounts
 @app.route('/manage_tenants', methods=['GET', 'POST'])
 def manage_tenants():
     if request.method == 'POST':
@@ -153,27 +136,23 @@ def browse_request():
     requests = [doc.to_dict() for doc in req_query.stream()]
     return render_template('browse_request.html', requests=requests)
 
-# @app.route('/update_request_status/<request_id>', methods=['POST'])
-# def update_request_status(request_id):
-#     # Function implementation
-#     new_status = request.form.get('new_status')
-#     db.collection('maintenance_requests').document(request_id).update({'status': new_status})
-#     return redirect(url_for('browse_request'))
-
 @app.route('/update_status', methods=['POST'])
 def update_status():
     request_id = request.form.get('request_id')
     new_status = request.form.get('new_status')
 
     if not request_id:
-        return "Error: No request ID provided", 400
+        return "Invalid request ID", 400
 
     request_ref = db.collection('maintenance_requests').document(request_id)
-    if not request_ref.get().exists:
+    request_doc = request_ref.get()
+
+    if not request_doc.exists:
         return "Maintenance request not found", 404
 
     request_ref.update({'status': new_status})
     return redirect(url_for('browse_request'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
