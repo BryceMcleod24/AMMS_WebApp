@@ -1,23 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Manage Tenants</title>
+    <meta charset="UTF-8">
+    <title>Manage Tenants</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        ul {
+            list-style: none;
+        }
+        li {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        form {
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        function confirmDeletion(tenantId) {
+            var confirmDelete = confirm("Are you sure you want to delete this tenant?");
+            if (confirmDelete) {
+                window.location.href = `/delete_tenant/${tenantId}`;
+            }
+        }
+    </script>
 </head>
 <body>
-<form action="/manage_tenants" method="post">
-  <label for="name">Tenant Name:</label><br>
-  <input type="text" id="name" name="name"><br>
-  <label for="apartment">Apartment:</label><br>
-  <input type="text" id="apartment" name="apartment"><br>
-  <input type="submit" value="Add Tenant">
-</form>
+<nav>
+    <a href="/">Home</a>
+</nav>
 
 <h2>Current Tenants</h2>
 <ul>
-  {% for tenant in tenants %}
-  <li>{{ tenant.name }} - {{ tenant.apartment }}</li>
-  {% endfor %}
+    {% for tenant in tenants %}
+    <li>
+        Tenant ID: {{ tenant['tenant_id'] }} - Name: {{ tenant['name'] }} - Apartment: {{ tenant['apartment_number'] }}
+        <form action="/manage_tenants" method="post">
+            <input type="hidden" name="tenant_id" value="{{ tenant['tenant_id'] }}">
+            <label for="new_apartment_number">Change Apartment Number:</label>
+            <input type="text" id="new_apartment_number" name="new_apartment_number">
+            <input type="submit" value="Update Apartment">
+        </form>
+        <form action="/delete_tenant/{{ tenant['tenant_id'] }}" method="post" onsubmit="return confirm('Are you sure you want to delete this tenant?');">
+            <input type="submit" value="Delete Tenant">
+        </form>
+
+        <button onclick="confirmDeletion('{{ tenant['tenant_id'] }}')">Delete Tenant</button>
+    </li>
+    {% endfor %}
 </ul>
 </body>
 </html>

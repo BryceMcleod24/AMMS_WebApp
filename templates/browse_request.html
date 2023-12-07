@@ -3,10 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <title>Browse Maintenance Requests</title>
+  <style>
+    ul {
+      list-style-type: none;
+    }
+    li {
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ddd;
+    }
+    img {
+      max-width: 100px;
+      height: auto;
+    }
+    form {
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
+<nav>
+    <a href="/">Home</a>
+</nav>
+
 <h1>Browse Maintenance Requests</h1>
-<!-- Filter Form -->
 <form action="/browse_request" method="get">
   Apartment Number: <input type="text" name="apartment_number"><br>
   Area: <input type="text" name="area"><br>
@@ -26,16 +46,15 @@
     ID: {{ request['request_id'] }} - Apartment: {{ request['apartment_number'] }} - Area: {{ request['area'] }}
     - Description: {{ request['description'] }} - Status: {{ request['status'] }}
 
-    <!-- Display the image if 'photo_url' is available -->
     {% if request['photo_url'] %}
-    <img src="{{ request['photo_url'] }}" alt="Maintenance Request Photo" width="200">
+    <img src="{{ request['photo_url'] }}" alt="Maintenance Request Photo">
     {% endif %}
 
     <form action="/update_status" method="post">
       <input type="hidden" name="request_id" value="{{ request['request_id'] }}">
       <select name="new_status">
-        <option value="pending">Pending</option>
-        <option value="completed">Completed</option>
+        <option value="pending" {% if request['status'] == 'pending' %}selected{% endif %}>Pending</option>
+        <option value="completed" {% if request['status'] == 'completed' %}selected{% endif %}>Completed</option>
       </select>
       <input type="submit" value="Update Status">
     </form>

@@ -12,21 +12,24 @@ firebase_admin.initialize_app(cred, {
     'storageBucket': 'amms-db.appspot.com'
 })
 
-
 # Initialize Firestore and Storage clients
 db = firestore.client()
 bucket = storage.bucket()
 
 @app.route('/')
 def home():
+    return render_template('home.html')
     # return render_template('submit_request.html')
-    return render_template('browse_request.html')
+    # return render_template('browse_request.html')
     # return render_template('create_tenant.html')
 
 @app.route('/submit_request', methods=['GET', 'POST'])
 def submit_request():
     if request.method == 'POST':
         data = request.form
+        if not data.get('tenant_id') or not data.get('apartment'):
+            return "Error: Missing required fields", 400
+
         photo = request.files['photo']
 
         if photo:
@@ -85,18 +88,25 @@ def create_tenant():
 # Route to Manage Tenant Accounts
 @app.route('/manage_tenants', methods=['GET', 'POST'])
 def manage_tenants():
-    # Implement logic to add, update, delete tenant information
     if request.method == 'POST':
-        # Example logic to add a tenant
-        tenant_data = request.form
-        db.collection('tenants').add({
-            'name': tenant_data.get('name'),
-            'apartment': tenant_data.get('apartment'),
-            # Add other fields as necessary
-        })
-    tenants = db.collection('tenants').stream()
-    tenant_list = [tenant.to_dict() for tenant in tenants]
-    return render_template('manage_tenants.html', tenants=tenant_list)
+        tenant_id = request.form.get('tenant_id')
+        new_apartment_number = request.form.get('new_apartment_number')
+
+        if tenant_id and new_apartment_number:
+            # Update the apartment number of the specified tenant
+            db.collection('tenant_accounts').document(tenant_id).update({'apartment_number': new_apartment_number})
+
+    # Fetch all tenants from Firestore
+    tenants_query = db.collection('tenant_accounts').stream()
+    tenants = [tenant.to_dict() for tenant in tenants_query]
+
+    return render_template('manage_tenants.html', tenants=tenants)
+
+@app.route('/delete_tenant/<tenant_id>', methods=['POST'])
+def delete_tenant(tenant_id):
+    # Deleting the tenant from Firestore
+    db.collection('tenant_accounts').document(tenant_id).delete()
+    return redirect(url_for('manage_tenants'))
 
 @app.route('/browse_request')
 def browse_request():
@@ -131,18 +141,14 @@ def update_status():
     request_id = request.form.get('request_id')
     new_status = request.form.get('new_status')
 
-    # Debugging: Print the request_id to check its value
-    print("Request ID:", request_id, "Type:", type(request_id))
+    if not request_id:
+        return "Error: No request ID provided", 400
 
-    # Check if the document exists before updating
     request_ref = db.collection('maintenance_requests').document(request_id)
     if not request_ref.get().exists:
         return "Maintenance request not found", 404
 
-    # Update the status in Firestore
     request_ref.update({'status': new_status})
-
-    # Redirect to the current page to refresh it
     return redirect(url_for('browse_request'))
 
 if __name__ == '__main__':
