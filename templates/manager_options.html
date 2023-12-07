@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manager Options</title>
+    <style>
+        /* Add styles for headers, navigation, and list */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        ul, li {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .tenant-list {
+            margin-top: 20px;
+        }
+        .tenant-list li {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/">Home</a>
+    </nav>
+    <h2>Manager Options</h2>
+    <ul>
+        <li><a href="/create_tenant">Add New Tenant</a></li>
+        <li><a href="/manage_tenants">Manage Tenants</a></li>
+    </ul>
+    <h3>Current Tenants</h3>
+    <ul class="tenant-list">
+        {% for tenant in tenants %}
+        <li>
+            Tenant ID: {{ tenant['tenant_id'] }}, Name: {{ tenant['name'] }}, Apartment: {{ tenant['apartment_number'] }}
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

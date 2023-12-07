@@ -23,6 +23,27 @@ def home():
     # return render_template('browse_request.html')
     # return render_template('create_tenant.html')
 
+@app.route('/tenant')
+def tenant():
+    return render_template('submit_request.html')
+
+@app.route('/staff')
+def staff():
+    return render_template('view_request.html')  # or any other page accessible by staff
+
+@app.route('/manager')
+def manager():
+    # return render_template('create_tenant.html')  # or any other page accessible by manager
+    return render_template('manager_options.html')
+
+@app.route('/manager_options')
+def manager_options():
+    tenants_query = db.collection('tenant_accounts').stream()
+    tenants = [tenant.to_dict() for tenant in tenants_query]
+    return render_template('manager_options.html', tenants=tenants)
+
+
+
 @app.route('/submit_request', methods=['GET', 'POST'])
 def submit_request():
     if request.method == 'POST':
@@ -64,11 +85,15 @@ def submit_request():
 
 
 # Route to View Requests
-@app.route('/view_requests')
-def view_requests():
+@app.route('/view_request')
+def view_request():
     docs = db.collection('maintenance_requests').stream()
     requests = [doc.to_dict() for doc in docs]
-    return render_template('view_requests.html', requests=requests)
+    return render_template('view_request.html', requests=requests)
+
+@app.route('/create_tenant', methods=['GET'])
+def create_tenant_form():
+    return render_template('create_tenant.html')
 
 @app.route('/create_tenant', methods=['POST'])
 def create_tenant():
@@ -99,7 +124,6 @@ def manage_tenants():
     # Fetch all tenants from Firestore
     tenants_query = db.collection('tenant_accounts').stream()
     tenants = [tenant.to_dict() for tenant in tenants_query]
-
     return render_template('manage_tenants.html', tenants=tenants)
 
 @app.route('/delete_tenant/<tenant_id>', methods=['POST'])

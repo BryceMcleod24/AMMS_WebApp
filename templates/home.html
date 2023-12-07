@@ -11,37 +11,52 @@
             text-align: center;
             padding-top: 50px;
         }
-        ul {
-            list-style-type: none;
-            padding: 0;
+              ul {
+        list-style-type: none;
+        padding: 0;
+        text-align: center;  /* Center-align list items */
         }
         li {
-            margin-bottom: 20px;
+            margin-bottom: 20px;  /* Increased spacing between buttons */
         }
         a {
             text-decoration: none;
-            color: #333;
-            background-color: #fff;
-            padding: 15px 20px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            transition: background-color 0.3s;
-            display: block;
+            color: white;
+            background-color: #007bff;
+            padding: 15px 30px;  /* Larger padding for bigger buttons */
+            font-size: 18px;  /* Larger font size for readability */
+            border-radius: 10px;  /* Rounded corners */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);  /* Subtle shadow for depth */
+            transition: background-color 0.3s, box-shadow 0.3s;
         }
         a:hover {
-            background-color: #ddd;
+            background-color: #0056b3;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);  /* Slightly larger shadow on hover */
         }
+
+
     </style>
+</head>
+<script>
+    function addTenant() {
+        window.location.href = "/create_tenant";
+    }
+
+    function manageTenant() {
+        window.location.href = "/manage_tenants";
+    }
+    </script>
 </head>
 <body>
     <h1>Welcome to AMMS Web Application</h1>
-    <p>Select an option below:</p>
+    <p>Select your role:</p>
     <ul>
-        <li><a href="/submit_request">Submit Maintenance Request</a></li>
-        <li><a href="/view_requests">View Maintenance Requests</a></li>
-        <li><a href="/create_tenant">Create Tenant</a></li>
-        <li><a href="/manage_tenants">Manage Tenant Accounts</a></li>
-        <li><a href="/browse_request">Browse Requests</a></li>
-    </ul>
+        <li><a href="/tenant">Tenant</a></li>
+        <li><a href="/staff">Staff</a></li>
+        <li><a href="/manager">Manager</a></li>
+{#        <li><a href="javascript:addTenant()">Add New Tenant</a></li>#}
+{#        <li><a href="javascript:manageTenant()">Manage Tenants</a></li>    #}
+</ul>
 </body>
 </html>
+
