@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Browse Maintenance Requests</title>
+</head>
+<body>
+<h1>Browse Maintenance Requests</h1>
+<!-- Filter Form -->
+<form action="/browse_request" method="get">
+  Apartment Number: <input type="text" name="apartment_number"><br>
+  Area: <input type="text" name="area"><br>
+  Status:
+  <select name="status">
+    <option value="">All</option>
+    <option value="pending">Pending</option>
+    <option value="completed">Completed</option>
+  </select><br>
+  Start Date: <input type="date" name="start_date"><br>
+  End Date: <input type="date" name="end_date"><br>
+  <input type="submit" value="Filter">
+</form>
+<ul>
+  {% for request in requests %}
+  <li>
+    ID: {{ request['request_id'] }} - Apartment: {{ request['apartment_number'] }} - Area: {{ request['area'] }}
+    - Description: {{ request['description'] }} - Status: {{ request['status'] }}
+
+    <!-- Display the image if 'photo_url' is available -->
+    {% if request['photo_url'] %}
+    <img src="{{ request['photo_url'] }}" alt="Maintenance Request Photo" width="200">
+    {% endif %}
+
+    <form action="/update_status" method="post">
+      <input type="hidden" name="request_id" value="{{ request['request_id'] }}">
+      <select name="new_status">
+        <option value="pending">Pending</option>
+        <option value="completed">Completed</option>
+      </select>
+      <input type="submit" value="Update Status">
+    </form>
+  </li>
+  {% endfor %}
+</ul>
+</body>
+</html>

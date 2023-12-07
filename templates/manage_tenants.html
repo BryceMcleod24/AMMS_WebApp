@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Tenants</title>
+</head>
+<body>
+<form action="/manage_tenants" method="post">
+  <label for="name">Tenant Name:</label><br>
+  <input type="text" id="name" name="name"><br>
+  <label for="apartment">Apartment:</label><br>
+  <input type="text" id="apartment" name="apartment"><br>
+  <input type="submit" value="Add Tenant">
+</form>
+
+<h2>Current Tenants</h2>
+<ul>
+  {% for tenant in tenants %}
+  <li>{{ tenant.name }} - {{ tenant.apartment }}</li>
+  {% endfor %}
+</ul>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Submit Maintenance Request</title>
+</head>
+<body>
+<h1>Submit Maintenance Request</h1>
+<form action="/submit_request" method="post" enctype="multipart/form-data">
+    Tenant ID: <input type="text" name="tenant_id"><br>
+    Apartment: <input type="text" name="apartment"><br>
+    Area of Problem: <input type="text" name="area"><br>
+    Description: <textarea name="description"></textarea><br>
+    Optional Photo: <input type="file" name="photo"><br>
+    <input type="submit" value="Submit Request">
+</form>
+</body>
+</html>

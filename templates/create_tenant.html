@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Maintenance Request Web App</title>
+    <style>
+        /* Add your CSS styling here */
+    </style>
+</head>
+<body>
+<header>
+    <h1>Maintenance Request Web App</h1>
+    <nav>
+        <!-- Navigation bar items -->
+    </nav>
+</header>
+
+<section>
+    <h2>Create Tenant Account</h2>
+    <form action="/create_tenant" method="post">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name"><br>
+        <label for="phone">Phone Number:</label><br>
+        <input type="text" id="phone" name="phone"><br>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email"><br>
+        <label for="check_in">Check-In Date:</label><br>
+        <input type="date" id="check_in" name="check_in"><br>
+        <label for="check_out">Check-Out Date:</label><br>
+        <input type="date" id="check_out" name="check_out"><br>
+        <label for="apartment_number">Apartment Number:</label><br>
+        <input type="text" id="apartment_number" name="apartment_number"><br>
+        <input type="submit" value="Create Account">
+    </form>
+</section>
+
+<footer>
+    <!-- Footer content -->
+</footer>
+</body>
+</html>
