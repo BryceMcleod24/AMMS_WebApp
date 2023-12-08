@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Browse Maintenance Requests</title>
   <style>
-    /* Styles for the body */
     body {
       font-family: Arial, sans-serif;
       background-color: #f4f4f4;
@@ -13,7 +12,6 @@
       padding: 0;
     }
 
-    /* Styles for the navigation bar */
     nav {
       background-color: #007BFF;
       color: #fff;
@@ -27,7 +25,6 @@
       margin-right: 20px;
     }
 
-    /* Styles for the main content */
     h1 {
       font-size: 24px;
       color: #333;
@@ -80,7 +77,6 @@
       background-color: #0056b3;
     }
 
-    /* Styles for the list of maintenance requests */
     ul {
       list-style-type: none;
       padding: 0;
@@ -103,7 +99,6 @@
       border: 1px solid #ddd;
     }
 
-    /* Styles for the update status form */
     form[action="/update_status"] {
       display: flex;
       align-items: center;
@@ -164,14 +159,16 @@
     <img src="{{ request['photo_url'] }}" alt="Maintenance Request Photo">
     {% endif %}
 
-    <form action="/update_status" method="post">
-      <input type="hidden" name="request_id" value="{{ request['request_id'] }}">
-      <select name="new_status">
-        <option value="pending" {% if request['status'] == 'pending' %}selected{% endif %}>Pending</option>
-        <option value="completed" {% if request['status'] == 'completed' %}selected{% endif %}>Completed</option>
-      </select>
-      <input type="submit" value="Update Status">
-    </form>
+    <form action="/update_request_status" method="POST">
+    <input type="hidden" name="request_id" value="{{ request.request_id }}">
+    <label for="new_status">New Status:</label>
+    <select name="new_status">
+        <option value="pending">Pending</option>
+        <option value="completed">Completed</option>
+        <!-- Add other status options as needed -->
+    </select>
+    <input type="submit" value="Update Status">
+</form>
   </li>
   {% endfor %}
 </ul>

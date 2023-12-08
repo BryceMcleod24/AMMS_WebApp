@@ -6,14 +6,12 @@ from firebase_admin import storage
 from datetime import datetime
 import uuid
 
-# Initialize Firebase Admin with the service account and specify the storageBucket
 app = Flask(__name__)
 cred = credentials.Certificate("serviceAccountKey.json")
 firebase_admin.initialize_app(cred, {
     'storageBucket': 'amms-db.appspot.com'
 })
 
-# Initialize Firestore and Storage clients
 db = firestore.client()
 bucket = storage.bucket()
 
@@ -32,7 +30,6 @@ def staff():
 
 @app.route('/manager')
 def manager():
-    # return render_template('create_tenant.html')  # or any other page accessible by manager
     return render_template('manager_options.html')
 
 @app.route('/manager_options')
@@ -101,17 +98,14 @@ def manage_tenants():
         new_apartment_number = request.form.get('new_apartment_number')
 
         if tenant_id and new_apartment_number:
-            # Update the apartment number of the specified tenant
             db.collection('tenant_accounts').document(tenant_id).update({'apartment_number': new_apartment_number})
 
-    # Fetch all tenants from Firestore
     tenants_query = db.collection('tenant_accounts').stream()
     tenants = [tenant.to_dict() for tenant in tenants_query]
     return render_template('manage_tenants.html', tenants=tenants)
 
 @app.route('/delete_tenant/<tenant_id>', methods=['POST'])
 def delete_tenant(tenant_id):
-    # Deleting the tenant from Firestore
     db.collection('tenant_accounts').document(tenant_id).delete()
     return redirect(url_for('manage_tenants'))
 
@@ -120,7 +114,6 @@ def browse_request():
     queries = request.args
     req_query = db.collection('maintenance_requests')
 
-    # Check if each filter parameter is provided and not empty before applying it
     if 'apartment_number' in queries and queries['apartment_number']:
         req_query = req_query.where('apartment_number', '==', queries['apartment_number'])
     if 'area' in queries and queries['area']:
@@ -132,7 +125,6 @@ def browse_request():
         end_date = datetime.strptime(queries['end_date'], '%Y-%m-%d')
         req_query = req_query.where('request_date', '>=', start_date).where('request_date', '<=', end_date)
 
-    # Make sure to retrieve all fields of each request
     requests = [doc.to_dict() for doc in req_query.stream()]
     return render_template('browse_request.html', requests=requests)
 
@@ -152,6 +144,23 @@ def update_status():
 
     request_ref.update({'status': new_status})
     return redirect(url_for('browse_request'))
+
+@app.route('/update_request_status', methods=['POST'])
+def update_request_status():
+    try:
+        request_id = request.form['request_id']
+        new_status = request.form['new_status']
+
+        request_ref = db.collection('maintenance_requests').document(request_id)
+        request_doc = request_ref.get()
+
+        if request_doc.exists:
+            request_ref.update({'status': new_status})
+            return redirect(url_for('staff'))  # Redirect to the staff page or any other appropriate page
+        else:
+            return "Maintenance request not found", 404
+    except Exception as e:
+        return str(e), 500
 
 
 if __name__ == '__main__':

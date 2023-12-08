@@ -10,18 +10,13 @@
 </nav>
 <h1>Maintenance Requests</h1>
 
-<!-- Filter Form -->
 <form action="/view_request" method="get">
-    <!-- Add fields for filtering by apartment number, area, date range, and status -->
-    <!-- ... -->
     <input type="submit" value="Filter">
 </form>
 
 <ul>
     {% for request in requests %}
     <li>
-{#    <li>{{ request.tenant_id }} - {{ request.apartment }} - {{ request.area }} - {{ request.description }} - Status: {{ request.status }}</li>#}
-
         <form action="/update_status" method="post">
             <input type="hidden" name="request_id" value="{{ request.request_id }}">
             <select name="new_status">

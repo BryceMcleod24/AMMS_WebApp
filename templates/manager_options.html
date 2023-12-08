@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Manager Options</title>
     <style>
-        /* Add styles for headers, navigation, and list */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -101,15 +100,19 @@
             <a class="btn" href="/manage_tenants">Manage Tenants</a>
         </div>
         <h2 class="sub-heading">Current Tenants</h2>
-        <ul class="tenant-list">
-            {% for tenant in tenants %}
-            <li class="tenant-item">
-                <div class="tenant-details">
-                    Tenant ID: {{ tenant['tenant_id'] }}, Name: {{ tenant['name'] }}, Apartment: {{ tenant['apartment_number'] }}
-                </div>
-            </li>
-            {% endfor %}
-        </ul>
+        <div class="tenant-list">
+        {% for tenant in tenants %}
+            <div class="tenant-item">
+                <p><strong>Tenant ID:</strong> {{ tenant.tenant_id }}</p>
+                <p><strong>Name:</strong> {{ tenant.name }}</p>
+                <p><strong>Contact:</strong> {{ tenant.contact_info }}</p>
+                <p><strong>Apartment:</strong> {{ tenant.apartment_number }}</p>
+                <p><strong>Check-in:</strong> {{ tenant.check_in }}</p>
+                <p><strong>Check-out:</strong> {{ tenant.check_out }}</p>
+            </div>
+        {% else %}
+            <p>No tenants found.</p>
+        {% endfor %}
     </div>
 </body>
 </html>
